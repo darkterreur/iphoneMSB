@@ -102,9 +102,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-     //listProjet = [ NSArray arrayWithObjects:@"projet1",@"projet2", nil];
+    // listProjet = [ NSArray arrayWithObjects:@"projet1",@"projet2", nil];
     
-    
+    NSLog(@"je fait un truc ou pas");
     
     //c'est pour un projet plus structuré ou l'on ecrase pas a chaque fois
     app = [[UIApplication sharedApplication] delegate];
@@ -114,6 +114,7 @@
     
     listProjet = [self findListeProject];
     
+    NSLog(@"fini ajout ");
     
     
     
@@ -132,20 +133,23 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-        return [listProjet count];
+    
+    return 0;
    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
-    return 0;
+    
+    return [listProjet count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    //version pour base
+    
     NSLog(@"je suis dans la fonction");
-    static NSString *cellid = @"uniqueIdentifier";
+    static NSString *cellid = @"listProjetCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
     if(!cell){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellid];
