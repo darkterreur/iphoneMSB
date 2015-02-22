@@ -7,7 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
-@interface projectTableViewController : UITableViewController
+@interface projectTableViewController : UITableViewController<UITableViewDelegate,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
+
+{
+    
+    AppDelegate * app;
+    NSManagedObjectContext * context;
+}
+
+//@property(nonatomic) UITableView * maListe;
+//@property(nonatomic) NSArray * tableData;
 
 @end

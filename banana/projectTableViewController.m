@@ -18,10 +18,101 @@
     
 }
 
+
+-(void)ajoutProjet : (NSString *) libelle {
+    
+    NSManagedObject * newProjet;
+    
+    newProjet = [NSEntityDescription insertNewObjectForEntityForName: @"Projets" inManagedObjectContext:context];
+    
+    NSLog(@"id -> %ld", [self autoIncrementProject:@"Projets"]);
+    
+    NSNumber *idNumber = [NSNumber numberWithInt:[self autoIncrementProject:@"Projets"]];
+    
+    [newProjet setValue:libelle forKey:@"libelle_projet"];
+    [newProjet setValue:idNumber forKey:@"id_projet"];
+    
+    
+    [context save:nil];
+}
+
+
+-(NSInteger)autoIncrementProject : (NSString *) table{
+    
+    NSEntityDescription * query = [NSEntityDescription entityForName:table inManagedObjectContext:context];
+    NSFetchRequest * request = [NSFetchRequest new];
+    [request setEntity:query];
+    
+    NSError * error;
+    NSArray * mesResultats = [context executeFetchRequest:request error:&error];
+    if(error){
+        NSLog(@"%@", error.description);
+    }
+    
+    NSInteger newID = 0;
+    
+    for (NSDictionary *dict in mesResultats) {
+        NSInteger IDToCompare = [[dict valueForKey:@"id_projet"] integerValue];
+        
+        if (IDToCompare >= newID) {
+            newID = IDToCompare + 1;
+        }
+    }
+    
+    NSLog(@"new id -> %ld",newID);
+    return newID;
+    
+}
+
+//retourne le comptenu table
+-(NSArray *)findListeProject
+{
+    
+    NSEntityDescription * query = [NSEntityDescription entityForName:@"Projets" inManagedObjectContext:context];
+    NSFetchRequest * request = [NSFetchRequest new];
+    [request setEntity:query];
+    
+    NSError * error;
+    NSArray * mesResultats = [context executeFetchRequest:request error:&error];
+    if(error){
+        NSLog(@"%@", error.description);
+    }
+    
+    return mesResultats;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-     listProjet = [ NSArray arrayWithObjects:@"projet1",@"projet2", nil];
+     //listProjet = [ NSArray arrayWithObjects:@"projet1",@"projet2", nil];
     
+    
+    
+    //c'est pour un projet plus structuré ou l'on ecrase pas a chaque fois
+    app = [[UIApplication sharedApplication] delegate];
+    context = [app managedObjectContext];
+    [self ajoutProjet:@"platre"];
+    [self ajoutProjet:@"faire la plonge"];
+    
+    listProjet = [self findListeProject];
     
     
     
@@ -53,7 +144,23 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    NSLog(@"je suis dans la fonction");
+    static NSString *cellid = @"uniqueIdentifier";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+    if(!cell){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellid];
+    }
+    NSMutableDictionary *dict = [listProjet objectAtIndex:indexPath.row];
     
+    cell.textLabel.text = [dict valueForKey:@"libelle_projet"];
+    
+    return cell;
+    
+    
+    
+    
+    //version lionel
+    /*
     static NSString *cellid = @"listProjetCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
     if(!cell){
@@ -64,8 +171,8 @@
     cell.textLabel.text = listProjet[indexPath.row];
     
     return cell;
-    
-    return cell;
+    */
+
 }
 
 
